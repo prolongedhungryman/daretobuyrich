@@ -582,6 +582,111 @@
       .newly-added-investor {
         animation: item-added-shine 1s ease-out forwards;
       }
+      /* Mockery Box Styling */
+      .mockery-box {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: var(--ink);
+        color: var(--bg);
+        padding: 16px 24px;
+        border-radius: 12px;
+        max-width: 280px;
+        font-size: 13px;
+        font-weight: 500;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        z-index: 50;
+        display: none;
+        animation: slide-up 0.5s ease-out;
+      }
+
+      @keyframes slide-up {
+        from { transform: translateY(100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .mockery-title {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.6;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      /* Payment Step visibility */
+      .modal-step {
+        display: none;
+      }
+      .modal-step.active {
+        display: block;
+      }
+
+      .crypto-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .crypto-btn {
+        background-color: var(--card);
+        border: 1px solid var(--line);
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        transition: border-color 0.2s, background-color 0.2s;
+      }
+
+      .crypto-btn:hover, .crypto-btn.selected {
+        border-color: var(--ink);
+        background-color: var(--line);
+      }
+
+      .crypto-btn img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .wallet-display {
+        background-color: var(--card);
+        padding: 12px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 11px;
+        word-break: break-all;
+        margin-bottom: 16px;
+        border: 1px solid var(--line);
+        position: relative;
+      }
+
+      .copy-hint {
+        position: absolute;
+        top: -8px;
+        right: 8px;
+        background-color: var(--ink);
+        color: var(--bg);
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .qr-placeholder {
+        width: 120px;
+        height: 120px;
+        background-color: #eee;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #999;
+        border-radius: 8px;
+      }
     </style>
   </head>
   <body>
@@ -731,7 +836,7 @@
       
       <div class="editorial-intro">
         <h1 class="site-title">DARE TO BUY</h1>
-        <p class="site-subtitle">Unique Gallery Investment Segment — Rare Asset Release</p>
+        <p class="site-subtitle">ONE DAY • ONE ART • ONE LEGEND</p>
       </div>
 
       <!-- Centered Raw Image Piece. No frames. Subtle shadows standard to requirements. -->
@@ -819,174 +924,252 @@
     <div id="offer-modal" class="modal-overlay">
       <div class="modal-window">
         <button id="close-modal-btn" class="close-modal-btn" aria-label="Close modal">&times;</button>
-        <h3 class="modal-title-text">Investment Proposal</h3>
-        <p class="modal-subtext">Acquiring: <span class="artwork-label-emphasis">Silent Monument No. 1</span></p>
         
-        <form id="offer-form">
-          <div class="input-wrapper">
-            <label for="buyer-name" class="form-lbl">Your Full Name</label>
-            <input type="text" id="buyer-name" class="form-txt-input" placeholder="e.g. Liam Gallagher" required>
-          </div>
+        <!-- Step 1: Offer -->
+        <div id="step-offer" class="modal-step active">
+          <h3 class="modal-title-text">Investment Proposal</h3>
+          <p class="modal-subtext">Acquiring: <span class="artwork-label-emphasis" id="modal-product-name">...</span></p>
           
-          <div class="input-wrapper">
-            <label for="offer-amount" class="form-lbl">Investment Offer (USD)</label>
-            <div class="prefixed-input-box">
-              <span class="currency-prefix">$</span>
-              <input type="number" id="offer-amount" class="form-txt-input form-prefixed-input" min="200" max="4500" value="2500" required>
+          <form id="offer-form">
+            <div class="input-wrapper">
+              <label for="buyer-name" class="form-lbl">Your Full Name</label>
+              <input type="text" id="buyer-name" class="form-txt-input" placeholder="e.g. Liam Gallagher" required>
             </div>
-            <span class="hint-caption">Please enter an amount between $200 and $4,500.</span>
-          </div>
+            
+            <div class="input-wrapper">
+              <label for="offer-amount" class="form-lbl">Investment Offer (USD)</label>
+              <div class="prefixed-input-box">
+                <span class="currency-prefix">$</span>
+                <input type="number" id="offer-amount" class="form-txt-input form-prefixed-input" min="200" value="2500" required>
+              </div>
+              <span class="hint-caption">The price of glory starts at $200.</span>
+            </div>
+            
+            <button type="submit" class="submit-bid-btn">Proceed to Payment</button>
+          </form>
+        </div>
+
+        <!-- Step 2: Payment Method -->
+        <div id="step-payment" class="modal-step">
+          <h3 class="modal-title-text">Select Payment</h3>
+          <p class="modal-subtext">Choose your crypto asset to finalize the legend.</p>
           
-          <button type="submit" class="submit-bid-btn">Confirm Purchase</button>
-        </form>
+          <div class="crypto-options">
+            <button class="crypto-btn" data-currency="SOL">
+              <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL">
+              <span>Solana</span>
+            </button>
+            <button class="crypto-btn" data-currency="USDT">
+              <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT">
+              <span>USDT (BSC)</span>
+            </button>
+          </div>
+
+          <div id="wallet-info" style="display: none;">
+            <div class="qr-placeholder" id="qr-code">QR Code Loading...</div>
+            <div class="wallet-display">
+              <span class="copy-hint">Click to copy</span>
+              <span id="wallet-address">...</span>
+            </div>
+            <button id="confirm-payment-btn" class="submit-bid-btn">I Have Sent Payment</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="step-success" class="modal-step">
+          <h3 class="modal-title-text">Welcome, Legend.</h3>
+          <p class="modal-subtext">Your transaction is being verified on the blockchain. Your name will be etched in history shortly.</p>
+          <button id="finish-btn" class="submit-bid-btn">Close Window</button>
+        </div>
       </div>
+    </div>
+
+    <!-- Mockery System -->
+    <div id="mockery-box" class="mockery-box">
+      <span class="mockery-title">Gallery Commentator</span>
+      <p id="mockery-text">Looking for guts? You might be the first today.</p>
     </div>
 
     <!-- Client-side Interactive Application Logic -->
     <script>
-      // 1. Dynamic Client-side Date Generator matching "Month DD, YYYY" precisely
-      function renderCurrentDate() {
-        const dateContainer = document.getElementById('current-date');
-        if (dateContainer) {
-          const months = [
-            "January", "February", "March", "April", "May", "June", 
-            "July", "August", "September", "October", "November", "December"
-          ];
-          const today = new Date();
-          const monthText = months[today.getMonth()];
-          const dateNum = today.getDate();
-          const yearNum = today.getFullYear();
-          dateContainer.textContent = `${monthText} ${dateNum}, ${yearNum}`;
+      const API_URL = 'http://localhost:3002';
+      let currentProduct = null;
+      let selectedCurrency = null;
+
+      // 1. Fetch Today's Product from Backend
+      async function fetchTodayProduct() {
+        try {
+          const res = await fetch(`${API_URL}/api/today`);
+          const data = await res.json();
+          currentProduct = data;
+          
+          if (data) {
+            document.getElementById('product-artwork').src = `${API_URL}/public${data.image}`;
+            document.getElementById('modal-product-name').textContent = data.name;
+            if (data.status === 'sold') {
+              const buyBtn = document.getElementById('buy-button');
+              buyBtn.textContent = `SOLD TO ${data.buyer.toUpperCase()}`;
+              buyBtn.disabled = true;
+              buyBtn.style.opacity = '0.5';
+              buyBtn.style.cursor = 'not-allowed';
+            }
+            startMockery(data.mock_messages);
+          }
+        } catch (error) {
+          console.error("Failed to fetch product:", error);
         }
       }
 
-      // 2. Persistent Client-side Dark/Light Toggle System via localStorage & CSS custom attributes
-      function initializeTheme() {
-        const toggleBtn = document.getElementById('theme-toggle');
-        const localStorageKey = 'theme-selection';
-        
-        // Grab existing preference or fallback to light (the default spec)
-        let activeTheme = localStorage.getItem(localStorageKey);
-        if (!activeTheme) {
-          activeTheme = 'light';
+      // 2. Mockery System Logic
+      function startMockery(messages) {
+        const box = document.getElementById('mockery-box');
+        const text = document.getElementById('mockery-text');
+        if (!messages || messages.length === 0) return;
+
+        function showMock() {
+          if (currentProduct && currentProduct.status === 'sold') return;
+          const msg = messages[Math.floor(Math.random() * messages.length)];
+          text.textContent = msg;
+          box.style.display = 'block';
+          
+          setTimeout(() => {
+            box.style.display = 'none';
+            setTimeout(showMock, Math.random() * 15000 + 10000); // Wait 10-25s
+          }, 6000);
         }
 
-        // Apply state
-        if (activeTheme === 'dark') {
-          document.body.classList.add('dark-mode');
-        } else {
-          document.body.classList.remove('dark-mode');
-        }
-
-        // Toggle Event Listener
-        toggleBtn.addEventListener('click', () => {
-          const toggledState = document.body.classList.toggle('dark-mode');
-          const savedTheme = toggledState ? 'dark' : 'light';
-          localStorage.setItem(localStorageKey, savedTheme);
-        });
+        setTimeout(showMock, 5000);
       }
 
-      // 3. Simple Bidding Drawer and Alert Success System
+      // 3. Purchase Flow with Steps
       function initializePurchaseFlow() {
-        const buyBtn = document.getElementById('buy-button');
-        const modalOverlay = document.getElementById('offer-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modal = document.getElementById('offer-modal');
         const offerForm = document.getElementById('offer-form');
+        const cryptoBtns = document.querySelectorAll('.crypto-btn');
+        const walletInfo = document.getElementById('wallet-info');
+        const walletAddress = document.getElementById('wallet-address');
+        const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
 
-        // Opening action
-        buyBtn.addEventListener('click', () => {
-          modalOverlay.classList.add('active');
-          document.body.style.overflow = 'hidden'; // Stop viewport frame scrolling
-        });
-
-        // Closing actions
-        function dismissModal() {
-          modalOverlay.classList.remove('active');
-          document.body.style.overflow = '';
+        function showStep(stepId) {
+          document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+          document.getElementById(stepId).classList.add('active');
         }
 
-        closeModalBtn.addEventListener('click', dismissModal);
-
-        modalOverlay.addEventListener('click', (e) => {
-          if (e.target === modalOverlay) {
-            dismissModal();
-          }
+        document.getElementById('buy-button').addEventListener('click', () => {
+          modal.classList.add('active');
+          showStep('step-offer');
         });
 
-        // Pressing escape exits standard modal
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-            dismissModal();
-          }
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+          modal.classList.remove('active');
         });
 
-        // Offer Submission Handling
-        offerForm.addEventListener('submit', (e) => {
+        // Step 1 -> Step 2
+        offerForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const buyerName = document.getElementById('buyer-name').value.trim();
-          const bidVal = parseInt(document.getElementById('offer-amount').value, 10);
+          showStep('step-payment');
+        });
 
-          if (!buyerName) {
-            alert('Please enter your name.');
-            return;
+        // Step 2 Selection
+        cryptoBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            cryptoBtns.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCurrency = btn.dataset.currency;
+            
+            walletInfo.style.display = 'block';
+            if (selectedCurrency === 'SOL') {
+              walletAddress.textContent = "AKWDrraZTwG5rdvRHqzTxTum5jB4C5bbea34bhFC1Y7b";
+              document.getElementById('qr-code').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=solana:AKWDrraZTwG5rdvRHqzTxTum5jB4C5bbea34bhFC1Y7b" style="width:100%">`;
+            } else {
+              walletAddress.textContent = "0xe39d1ffc596bf276f6e2c0bf518020715e3f9765";
+              document.getElementById('qr-code').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=ethereum:0xe39d1ffc596bf276f6e2c0bf518020715e3f9765" style="width:100%">`;
+            }
+          });
+        });
+
+        // Step 2 -> Step 3 (Confirmation)
+        confirmPaymentBtn.addEventListener('click', async () => {
+          const name = document.getElementById('buyer-name').value;
+          const amount = document.getElementById('offer-amount').value;
+
+          try {
+            const res = await fetch(`${API_URL}/api/confirm-payment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                productId: currentProduct.id,
+                buyerName: name,
+                amount: amount,
+                method: selectedCurrency
+              })
+            });
+            const data = await res.json();
+            if (data.success) {
+              showStep('step-success');
+              injectNewInvestorCard(name, amount);
+              fetchTodayProduct(); // Refresh status
+            }
+          } catch (error) {
+            alert("Connection error. Try again.");
           }
+        });
 
-          if (isNaN(bidVal) || bidVal < 200 || bidVal > 4500) {
-            alert('Your offer must be between $200 and $4,500.');
-            return;
-          }
-
-          // Clear form & close overlay modal prior to success alert
-          offerForm.reset();
-          dismissModal();
-
-          // Fake confirmation alert literally as requested
-          alert("You're now an investor. Welcome.");
-
-          // Dynamically insert user as top new live investor card for breathtaking visual feedback!
-          injectNewInvestorCard(buyerName, bidVal);
+        document.getElementById('finish-btn').addEventListener('click', () => {
+          modal.classList.remove('active');
+        });
+        
+        // Copy wallet address
+        walletAddress.addEventListener('click', () => {
+          navigator.clipboard.writeText(walletAddress.textContent);
+          const hint = document.querySelector('.copy-hint');
+          hint.textContent = "Copied!";
+          setTimeout(() => hint.textContent = "Click to copy", 2000);
         });
       }
 
-      // Gorgeous dynamic feedback reinforcing "You're now an investor. Welcome."
       function injectNewInvestorCard(name, amount) {
         const grid = document.getElementById('investors-grid');
         if (grid) {
           const card = document.createElement('div');
-          // Add pulse keyframe visual entrance
           card.className = 'investor-card newly-added-investor';
-          
-          // Randomly associate a high-quality avatar index (1 to 20)
           const randomImageNum = Math.floor(Math.random() * 20) + 1;
-          const currencyValue = Number(amount).toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-          });
-
           card.innerHTML = `
             <div class="investor-avatar-box">
               <img src="https://i.pravatar.cc/40?img=${randomImageNum}" class="investor-img" alt="${name}" referrerPolicy="no-referrer">
               <span class="live-dot"></span>
             </div>
             <div class="investor-name">${name}</div>
-            <div class="investor-price">${currencyValue}</div>
+            <div class="investor-price">$${amount}</div>
           `;
-
-          // Insert as first element in row
           grid.insertBefore(card, grid.firstChild);
-
-          // Pop off last child if list has grown past 6, keeping grid completely visually clean
-          if (grid.children.length > 6) {
-            grid.removeChild(grid.lastChild);
-          }
+          if (grid.children.length > 6) grid.removeChild(grid.lastChild);
         }
       }
 
-      // Initializer Dispatch
+      function renderCurrentDate() {
+        const dateContainer = document.getElementById('current-date');
+        if (dateContainer) {
+          const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+          const today = new Date();
+          dateContainer.textContent = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+        }
+      }
+
+      function initializeTheme() {
+        const toggleBtn = document.getElementById('theme-toggle');
+        let activeTheme = localStorage.getItem('theme-selection') || 'light';
+        if (activeTheme === 'dark') document.body.classList.add('dark-mode');
+        toggleBtn.addEventListener('click', () => {
+          const toggledState = document.body.classList.toggle('dark-mode');
+          localStorage.setItem('theme-selection', toggledState ? 'dark' : 'light');
+        });
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         renderCurrentDate();
         initializeTheme();
+        fetchTodayProduct();
         initializePurchaseFlow();
       });
     </script>

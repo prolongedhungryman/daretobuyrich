@@ -1,0 +1,22 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "date": "2026-05-30",
+      "name": "Silent Monument No. 1",
+      "description": "The first entry in the legend series. A rare minimalist digital asset.",
+      "price": 2500,
+      "image": "/artwork.png",
+      "status": "available",
+      "buyer": null,
+      "mock_messages": [
+        "Only one legend is born today. Will it be you?",
+        "Hesitation is the enemy of exclusivity.",
+        "Scared of digital glory?",
+        "Someone else is looking at this right now.",
+        "If you got guts, confirm it."
+      ]
+    }
+  ],
+  "purchases": []
+}

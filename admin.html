@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARE TO BUY | Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --ink: #ffffff;
+            --card: #1a1a1a;
+            --line: rgba(255, 255, 255, 0.1);
+            --accent: #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 32px;
+        }
+
+        .card {
+            background-color: var(--card);
+            border: 1px solid var(--line);
+            padding: 32px;
+            border-radius: 12px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--ink);
+        }
+
+        .btn {
+            background-color: var(--ink);
+            color: var(--bg);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 12px;
+            opacity: 0.5;
+            border-bottom: 1px solid var(--line);
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: var(--line);
+        }
+
+        .badge-success { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-overlay">
+        <div class="card" style="width: 320px;">
+            <span class="section-title">Security Required</span>
+            <input type="password" id="admin-pass" placeholder="Admin Passphrase">
+            <button class="btn" id="login-btn">Access Dashboard</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Gallery Control</h1>
+            <button id="logout-btn" style="background:none; border: 1px solid var(--line); color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Logout</button>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <span class="section-title">New Daily Release</span>
+                <form id="upload-form">
+                    <div class="form-group">
+                        <label>Asset Name</label>
+                        <input type="text" name="name" required placeholder="e.g. Echoes of Time">
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Price (USD)</label>
+                        <input type="number" name="price" required placeholder="2500">
+                    </div>
+                    <div class="form-group">
+                        <label>Release Date</label>
+                        <input type="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Image</label>
+                        <input type="file" name="image" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn">Upload & Publish</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <span class="section-title">Legend Log (Recent Sales)</span>
+                <table id="sales-table">
+                    <thead>
+                        <tr>
+                            <th>Buyer</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3002';
+        let password = localStorage.getItem('admin_pass');
+
+        if (password) {
+            document.getElementById('login-overlay').style.display = 'none';
+            fetchSales();
+        }
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const pass = document.getElementById('admin-pass').value;
+            localStorage.setItem('admin_pass', pass);
+            location.reload();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('admin_pass');
+            location.reload();
+        });
+
+        async function fetchSales() {
+            try {
+                const res = await fetch(`${API_URL}/api/admin/sales?password=${password}`);
+                if (!res.ok) throw new Error("Unauthorized");
+                const data = await res.json();
+                const tbody = document.querySelector('#sales-table tbody');
+                tbody.innerHTML = data.reverse().map(s => `
+                    <tr>
+                        <td><b>${s.buyerName}</b></td>
+                        <td>$${s.amount}</td>
+                        <td><span class="badge badge-success">${s.method}</span></td>
+                        <td>${new Date(s.date).toLocaleDateString()}</td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                localStorage.removeItem('admin_pass');
+                document.getElementById('login-overlay').style.display = 'flex';
+            }
+        }
+
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            formData.append('password', password);
+
+            try {
+                const res = await fetch(`${API_URL}/api/admin/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Published successfully!");
+                    e.target.reset();
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert("Upload failed.");
+            }
+        });
+    </script>
+</body>
+</html>
