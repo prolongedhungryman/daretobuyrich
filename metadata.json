@@ -1,0 +1,6 @@
+{
+  "name": "DARE TO BUY",
+  "description": "A minimal, editorial single-page art investment platform featuring a piece of artwork, live investor bidding patterns, and a dynamic mode toggle.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

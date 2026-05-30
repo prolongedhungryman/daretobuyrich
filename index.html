@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DARE TO BUY</title>
+    <!-- Google Fonts for Editorial Contemporary Style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <style>
+      /* CSS Variables - Clean Minimalism Pattern */
+      :root {
+        --bg: #ffffff;
+        --ink: #0a0a0a;
+        --card: #f9f9f9;
+        --line: rgba(0, 0, 0, 0.06);
+        --modal-overlay-bg: rgba(0, 0, 0, 0.6);
+        --green-dot: #22c55e;
+      }
+
+      body.dark-mode {
+        --bg: #0a0a0a;
+        --ink: #ffffff;
+        --card: #1a1a1a;
+        --line: rgba(255, 255, 255, 0.1);
+        --modal-overlay-bg: rgba(0, 0, 0, 0.85);
+      }
+
+      /* Global Reset & Base Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
+
+      /* Header Bar Rules - Clean Minimalism layout */
+      .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px 40px;
+        background-color: var(--bg);
+        transition: background-color 0.4s ease;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      @media (max-width: 640px) {
+        .header-bar {
+          padding: 16px 20px;
+        }
+      }
+
+      .header-date {
+        font-size: 12px;
+        font-weight: 400;
+        opacity: 0.5;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      /* Theme Button Toggle - Circle hollow minimalist style with line borders */
+      .theme-btn {
+        background: none;
+        border: 1px solid var(--line);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink);
+        transition: border-color 0.3s, color 0.4s ease, transform 0.2s ease;
+      }
+
+      .theme-btn:hover {
+        border-color: var(--ink);
+        transform: scale(1.05);
+      }
+
+      /* Toggle icon display based on active state */
+      .icon-sun {
+        display: none;
+      }
+      body.dark-mode .icon-sun {
+        display: block;
+      }
+      body.dark-mode .icon-moon {
+        display: none;
+      }
+
+      /* Marquee Containers Styling - Grayscale & line margins */
+      .marquee-container {
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        height: 48px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        background-color: var(--bg);
+        position: relative;
+        transition: background-color 0.4s ease, border-color 0.4s ease;
+      }
+
+      /* Gradient Mask for contemporary fading rules */
+      .marquee-container::before,
+      .marquee-container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 15%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .marquee-container::before {
+        left: 0;
+        background: linear-gradient(to right, var(--bg), transparent);
+      }
+      .marquee-container::after {
+        right: 0;
+        background: linear-gradient(to left, var(--bg), transparent);
+      }
+
+      .marquee-track {
+        display: flex;
+        width: max-content;
+        /* Smooth left-to-right scrolling looping continuously */
+        animation: marquee-scroll-ltr 40s linear infinite;
+        white-space: nowrap;
+      }
+
+      @keyframes marquee-scroll-ltr {
+        0% {
+          transform: translateX(-50%);
+        }
+        100% {
+          transform: translateX(0%);
+        }
+      }
+
+      .marquee-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 48px;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--ink);
+        transition: color 0.4s ease;
+      }
+
+      .marquee-avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+        filter: grayscale(100%);
+        opacity: 0.95;
+      }
+
+      .buyer-name {
+        font-weight: 600;
+      }
+
+      .artwork-name {
+        font-style: normal;
+        opacity: 0.6;
+        font-weight: 400;
+      }
+
+      /* Main Content (Center of Page) */
+      .main-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px 64px 24px;
+        max-width: 1024px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .editorial-intro {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .site-title {
+        font-size: 2.22rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.28em;
+        margin-bottom: 8px;
+        color: var(--ink);
+        transition: color 0.4s ease;
+      }
+
+      @media (max-width: 640px) {
+        .site-title {
+          font-size: 1.8rem;
+          letter-spacing: 0.18em;
+        }
+      }
+
+      .site-subtitle {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--ink);
+        opacity: 0.5;
+        font-weight: 500;
+        transition: color 0.4s ease;
+      }
+
+      /* Product Image Container Frame from Spec: 320x420 aspect frame with custom box shadow */
+      .artwork-wrapper {
+        width: 420px;
+        max-width: 100%;
+        height: 320px;
+        overflow: hidden;
+        border-radius: 0px;
+        margin-bottom: 24px;
+        background-color: var(--card);
+        border: 1px solid var(--line);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.4s ease, transform 0.3s ease;
+      }
+
+      @media (max-width: 480px) {
+        .artwork-wrapper {
+          height: 240px;
+        }
+      }
+
+      .artwork-wrapper:hover {
+        transform: scale(1.01);
+      }
+
+      #product-artwork {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* Buy Button Area style choices matching Clean Minimalism setup */
+      .bidding-container {
+        text-align: center;
+        margin-bottom: 56px;
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .buy-btn {
+        background-color: var(--ink);
+        color: var(--bg);
+        border: none;
+        padding: 14px 48px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: opacity 0.2s, background-color 0.4s ease, color 0.4s ease;
+        letter-spacing: 0.02em;
+        width: 100%;
+        text-transform: none;
+      }
+
+      .buy-btn:hover {
+        opacity: 0.9;
+      }
+
+      .price-range {
+        font-size: 11px;
+        opacity: 0.4;
+        margin-top: 12px;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      /* Real-time Investors Panel Rules based on Clean Minimalism grid spacing and borders */
+      .investors-section {
+        width: 100%;
+        border-top: 1px solid var(--line);
+        padding-top: 32px;
+        transition: border-color 0.4s ease;
+      }
+
+      .investors-title-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        opacity: 0.6;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .investors-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+      }
+
+      @media (max-width: 1024px) {
+        .investors-grid {
+          grid-template-columns: repeat(3, 1fr); /* 2 rows of 3 on tablet / mobile as requested */
+        }
+      }
+
+      @media (max-width: 640px) {
+        .investors-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 500px) {
+        .investors-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+      }
+
+      .investor-card {
+        background-color: var(--card);
+        border: 1px solid var(--line);
+        padding: 12px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.3s ease, background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.3s ease;
+      }
+
+      .investor-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--line);
+      }
+
+      .investor-avatar-box {
+        position: relative;
+        margin-bottom: 8px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .investor-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        filter: grayscale(100%);
+      }
+
+      .live-dot {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 6px;
+        height: 6px;
+        background-color: var(--green-dot);
+        border-radius: 50%;
+        border: 1.5px solid var(--card);
+        animation: pulse 2s infinite;
+      }
+
+      /* Accurate green pulse style choice */
+      @keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+      }
+
+      .investor-name {
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 2px;
+        color: var(--ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .investor-price {
+        font-size: 10px;
+        opacity: 0.6;
+      }
+
+      /* Interactive Modal/Overlay System based on clean minimalist choice */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--modal-overlay-bg);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .modal-window {
+        background-color: var(--bg);
+        padding: 40px;
+        border-radius: 12px;
+        width: 360px;
+        text-align: center;
+        border: 1px solid var(--line);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15);
+        position: relative;
+        transform: translateY(8px);
+        transition: transform 0.3s ease, background-color 0.4s ease;
+      }
+
+      .modal-overlay.active .modal-window {
+        transform: translateY(0);
+      }
+
+      .close-modal-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        font-weight: 200;
+        color: var(--ink);
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+        line-height: 1;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close-modal-btn:hover {
+        opacity: 0.9;
+      }
+
+      .modal-title-text {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 8px;
+        letter-spacing: -0.01em;
+      }
+
+      .modal-subtext {
+        font-size: 13px;
+        opacity: 0.6;
+        margin-bottom: 24px;
+      }
+
+      .artwork-label-emphasis {
+        font-weight: 600;
+      }
+
+      .input-wrapper {
+        margin-bottom: 16px;
+        text-align: left;
+      }
+
+      .form-lbl {
+        display: block;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        opacity: 0.5;
+        margin-bottom: 6px;
+      }
+
+      .form-txt-input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 4px;
+        border: 1px solid var(--line);
+        background-color: var(--card);
+        color: var(--ink);
+        border-radius: 4px;
+        font-size: 13px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.25s ease, background-color 0.25s ease;
+      }
+
+      .form-txt-input:focus {
+        border-color: var(--ink);
+      }
+
+      .prefixed-input-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .currency-prefix {
+        position: absolute;
+        left: 12px;
+        font-size: 13px;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .form-prefixed-input {
+        padding-left: 24px;
+      }
+
+      .hint-caption {
+        font-size: 11px;
+        opacity: 0.4;
+        margin-top: 4px;
+        display: block;
+      }
+
+      .submit-bid-btn {
+        width: 100%;
+        background-color: var(--ink);
+        color: var(--bg);
+        border: none;
+        padding: 14px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-top: 12px;
+        transition: opacity 0.2s, background-color 0.4s ease, color 0.4s ease;
+      }
+
+      .submit-bid-btn:hover {
+        opacity: 0.95;
+      }
+
+      /* Dynamically Added Investor Pulse Effect */
+      @keyframes item-added-shine {
+        0% {
+          background-color: var(--line);
+          transform: scale(0.98);
+        }
+        100% {
+          background-color: var(--card);
+          transform: scale(1);
+        }
+      }
+
+      .newly-added-investor {
+        animation: item-added-shine 1s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Header bar area -->
+    <header class="header-bar">
+      <div id="current-date" class="header-date">May 30, 2026</div>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+        <!-- Sun icon (shown in dark mode) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon icon-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon icon-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </header>
+
+    <!-- Seamless autoscrolling marquee below header (scrolling Left-To-Right) -->
+    <div class="marquee-container">
+      <div class="marquee-track" id="marquee-track">
+        <!-- Segment 1: Full loop set of 15 items -->
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=1" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Sarah Vance</span> acquired <span class="artwork-name">Echoes of Silence</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=2" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Liam Thorne</span> acquired <span class="artwork-name">Chiaroscuro No. 5</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=3" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Elena Rostova</span> acquired <span class="artwork-name">Void & Resonance</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=4" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Kenji Sato</span> acquired <span class="artwork-name">Gilded Horizon</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=5" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Jin-Woo Park</span> acquired <span class="artwork-name">Structural Whisper</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=6" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Sophia Laurent</span> acquired <span class="artwork-name">Tempest in Indigo</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=7" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">David Finch</span> acquired <span class="artwork-name">Monochrome Fracture</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=8" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Clara Oswald</span> acquired <span class="artwork-name">Silent Geometry No. 4</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=9" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Marcus Chen</span> acquired <span class="artwork-name">Shattered Monolith</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=10" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Amara Diop</span> acquired <span class="artwork-name">Whispering Ether</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=11" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Xavier Dupont</span> acquired <span class="artwork-name">Unbroken Line</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=12" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Maya Lin</span> acquired <span class="artwork-name">Subtle Gravity</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=13" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Tariq Al-Mansoor</span> acquired <span class="artwork-name">Ethereal Form</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=14" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Arthur Vance</span> acquired <span class="artwork-name">Minimalist Tide</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=15" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Olivia Wilde</span> acquired <span class="artwork-name">Amber Eclipse</span></span>
+        </div>
+
+        <!-- Segment 2: Exact Twin Duplicate for Seamless Infinite CSS Loop -->
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=1" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Sarah Vance</span> acquired <span class="artwork-name">Echoes of Silence</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=2" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Liam Thorne</span> acquired <span class="artwork-name">Chiaroscuro No. 5</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=3" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Elena Rostova</span> acquired <span class="artwork-name">Void & Resonance</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=4" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Kenji Sato</span> acquired <span class="artwork-name">Gilded Horizon</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=5" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Jin-Woo Park</span> acquired <span class="artwork-name">Structural Whisper</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=6" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Sophia Laurent</span> acquired <span class="artwork-name">Tempest in Indigo</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=7" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">David Finch</span> acquired <span class="artwork-name">Monochrome Fracture</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=8" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Clara Oswald</span> acquired <span class="artwork-name">Silent Geometry No. 4</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=9" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Marcus Chen</span> acquired <span class="artwork-name">Shattered Monolith</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=10" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Amara Diop</span> acquired <span class="artwork-name">Whispering Ether</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=11" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Xavier Dupont</span> acquired <span class="artwork-name">Unbroken Line</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=12" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Maya Lin</span> acquired <span class="artwork-name">Subtle Gravity</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=13" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Tariq Al-Mansoor</span> acquired <span class="artwork-name">Ethereal Form</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=14" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Arthur Vance</span> acquired <span class="artwork-name">Minimalist Tide</span></span>
+        </div>
+        <div class="marquee-item">
+          <img src="https://i.pravatar.cc/40?img=15" class="marquee-avatar" alt="" referrerPolicy="no-referrer">
+          <span><span class="buyer-name">Olivia Wilde</span> acquired <span class="artwork-name">Amber Eclipse</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Main Content -->
+    <main class="main-content">
+      
+      <div class="editorial-intro">
+        <h1 class="site-title">DARE TO BUY</h1>
+        <p class="site-subtitle">Unique Gallery Investment Segment — Rare Asset Release</p>
+      </div>
+
+      <!-- Centered Raw Image Piece. No frames. Subtle shadows standard to requirements. -->
+      <div class="artwork-wrapper">
+        <img src="artwork.png" id="product-artwork" alt="Contemporary Minimalist Artwork Piece" referrerPolicy="no-referrer">
+      </div>
+
+      <!-- Actionable Button Area -->
+      <div class="bidding-container">
+        <button id="buy-button" class="buy-btn">Buy This Piece</button>
+        <p class="price-range">$200 — $4,500</p>
+      </div>
+
+      <!-- Real-time dynamic active bidding/investors log -->
+      <section class="investors-section">
+        <h2 class="investors-title-label">Current Investors</h2>
+        <div class="investors-grid" id="investors-grid">
+          
+          <!-- Card 1 -->
+          <div class="investor-card" id="card-1">
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=16" class="investor-img" alt="Alex Mercer" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">Alex Mercer</div>
+            <div class="investor-price">$3,450</div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="investor-card" id="card-2">
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=17" class="investor-img" alt="Beatrice Dupont" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">Beatrice Dupont</div>
+            <div class="investor-price">$1,200</div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="investor-card" id="card-3">
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=18" class="investor-img" alt="Charles Nguyen" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">Charles Nguyen</div>
+            <div class="investor-price">$4,150</div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="investor-card" id="card-4">
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=19" class="investor-img" alt="Diana Prince" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">Diana Prince</div>
+            <div class="investor-price">$850</div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="investor-card" id="card-5">
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=20" class="investor-img" alt="Ethan Hunt" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">Ethan Hunt</div>
+            <div class="investor-price">$2,800</div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="investor-card" id="card-6">
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=21" class="investor-img" alt="Fiona Gallagher" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">Fiona Gallagher</div>
+            <div class="investor-price">$2,100</div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Overlay Purchase Modal Dialog -->
+    <div id="offer-modal" class="modal-overlay">
+      <div class="modal-window">
+        <button id="close-modal-btn" class="close-modal-btn" aria-label="Close modal">&times;</button>
+        <h3 class="modal-title-text">Investment Proposal</h3>
+        <p class="modal-subtext">Acquiring: <span class="artwork-label-emphasis">Silent Monument No. 1</span></p>
+        
+        <form id="offer-form">
+          <div class="input-wrapper">
+            <label for="buyer-name" class="form-lbl">Your Full Name</label>
+            <input type="text" id="buyer-name" class="form-txt-input" placeholder="e.g. Liam Gallagher" required>
+          </div>
+          
+          <div class="input-wrapper">
+            <label for="offer-amount" class="form-lbl">Investment Offer (USD)</label>
+            <div class="prefixed-input-box">
+              <span class="currency-prefix">$</span>
+              <input type="number" id="offer-amount" class="form-txt-input form-prefixed-input" min="200" max="4500" value="2500" required>
+            </div>
+            <span class="hint-caption">Please enter an amount between $200 and $4,500.</span>
+          </div>
+          
+          <button type="submit" class="submit-bid-btn">Confirm Purchase</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Client-side Interactive Application Logic -->
+    <script>
+      // 1. Dynamic Client-side Date Generator matching "Month DD, YYYY" precisely
+      function renderCurrentDate() {
+        const dateContainer = document.getElementById('current-date');
+        if (dateContainer) {
+          const months = [
+            "January", "February", "March", "April", "May", "June", 
+            "July", "August", "September", "October", "November", "December"
+          ];
+          const today = new Date();
+          const monthText = months[today.getMonth()];
+          const dateNum = today.getDate();
+          const yearNum = today.getFullYear();
+          dateContainer.textContent = `${monthText} ${dateNum}, ${yearNum}`;
+        }
+      }
+
+      // 2. Persistent Client-side Dark/Light Toggle System via localStorage & CSS custom attributes
+      function initializeTheme() {
+        const toggleBtn = document.getElementById('theme-toggle');
+        const localStorageKey = 'theme-selection';
+        
+        // Grab existing preference or fallback to light (the default spec)
+        let activeTheme = localStorage.getItem(localStorageKey);
+        if (!activeTheme) {
+          activeTheme = 'light';
+        }
+
+        // Apply state
+        if (activeTheme === 'dark') {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+
+        // Toggle Event Listener
+        toggleBtn.addEventListener('click', () => {
+          const toggledState = document.body.classList.toggle('dark-mode');
+          const savedTheme = toggledState ? 'dark' : 'light';
+          localStorage.setItem(localStorageKey, savedTheme);
+        });
+      }
+
+      // 3. Simple Bidding Drawer and Alert Success System
+      function initializePurchaseFlow() {
+        const buyBtn = document.getElementById('buy-button');
+        const modalOverlay = document.getElementById('offer-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const offerForm = document.getElementById('offer-form');
+
+        // Opening action
+        buyBtn.addEventListener('click', () => {
+          modalOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden'; // Stop viewport frame scrolling
+        });
+
+        // Closing actions
+        function dismissModal() {
+          modalOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        closeModalBtn.addEventListener('click', dismissModal);
+
+        modalOverlay.addEventListener('click', (e) => {
+          if (e.target === modalOverlay) {
+            dismissModal();
+          }
+        });
+
+        // Pressing escape exits standard modal
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            dismissModal();
+          }
+        });
+
+        // Offer Submission Handling
+        offerForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const buyerName = document.getElementById('buyer-name').value.trim();
+          const bidVal = parseInt(document.getElementById('offer-amount').value, 10);
+
+          if (!buyerName) {
+            alert('Please enter your name.');
+            return;
+          }
+
+          if (isNaN(bidVal) || bidVal < 200 || bidVal > 4500) {
+            alert('Your offer must be between $200 and $4,500.');
+            return;
+          }
+
+          // Clear form & close overlay modal prior to success alert
+          offerForm.reset();
+          dismissModal();
+
+          // Fake confirmation alert literally as requested
+          alert("You're now an investor. Welcome.");
+
+          // Dynamically insert user as top new live investor card for breathtaking visual feedback!
+          injectNewInvestorCard(buyerName, bidVal);
+        });
+      }
+
+      // Gorgeous dynamic feedback reinforcing "You're now an investor. Welcome."
+      function injectNewInvestorCard(name, amount) {
+        const grid = document.getElementById('investors-grid');
+        if (grid) {
+          const card = document.createElement('div');
+          // Add pulse keyframe visual entrance
+          card.className = 'investor-card newly-added-investor';
+          
+          // Randomly associate a high-quality avatar index (1 to 20)
+          const randomImageNum = Math.floor(Math.random() * 20) + 1;
+          const currencyValue = Number(amount).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+          });
+
+          card.innerHTML = `
+            <div class="investor-avatar-box">
+              <img src="https://i.pravatar.cc/40?img=${randomImageNum}" class="investor-img" alt="${name}" referrerPolicy="no-referrer">
+              <span class="live-dot"></span>
+            </div>
+            <div class="investor-name">${name}</div>
+            <div class="investor-price">${currencyValue}</div>
+          `;
+
+          // Insert as first element in row
+          grid.insertBefore(card, grid.firstChild);
+
+          // Pop off last child if list has grown past 6, keeping grid completely visually clean
+          if (grid.children.length > 6) {
+            grid.removeChild(grid.lastChild);
+          }
+        }
+      }
+
+      // Initializer Dispatch
+      document.addEventListener('DOMContentLoaded', () => {
+        renderCurrentDate();
+        initializeTheme();
+        initializePurchaseFlow();
+      });
+    </script>
+  </body>
+</html>
